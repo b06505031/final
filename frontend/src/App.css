@@ -4,8 +4,11 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  width: 500px;
+  /* width: 500px; */
+  width: 100vw;
   margin: auto;
+  background:
+        linear-gradient(0.40turn, #3f87a6, #ebf8e1, #f69d3c);
 }
 
 .App-title {
@@ -21,7 +24,7 @@
 }
 
 .App-messages {
-  width: 100%;
+  width: 500px;
   height: 300px;
   background: #eeeeee52;
   border-radius: 10px;

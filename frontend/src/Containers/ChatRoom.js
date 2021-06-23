@@ -71,6 +71,7 @@ const ChatRoom = ({ me, displayStatus }) => {
         />
       </div>
       <Input.Search
+        style={{width:"500px"}}
         value={messageInput}
         onChange={(e) =>
           setMessageInput(e.target.value)}
