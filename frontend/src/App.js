@@ -10,7 +10,7 @@ const App = () => {
   const savedMe = localStorage.getItem(LOCALSTORAGE_KEY);
   const [signedIn, setSignedIn] = useState(false);
   const [me, setMe] = useState(savedMe || "");
-
+  const [password,setPassword]=useState("")
   const displayStatus = (payload) => {
     if(payload.msg) {
       const {type, msg} = payload
@@ -41,7 +41,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {signedIn ? (<ChatRoom me={me} displayStatus={displayStatus}/>) : (<SignIn me={me} setMe={setMe} setSignedIn={setSignedIn} displayStatus={displayStatus}/>)}
+      {signedIn ? (<ChatRoom me={me} displayStatus={displayStatus}/>) : (<SignIn me={me} setMe={setMe} password={password}  setPassword={setPassword} setSignedIn={setSignedIn} displayStatus={displayStatus}/>)}
     </div>
   );
 };
