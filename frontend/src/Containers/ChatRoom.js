@@ -1,63 +1,95 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { Tabs, Input } from "antd";
+import { Tabs, Input, DatePicker, Space, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import ChatModal from "../Components/ChatModal";
 import useChatBox from "../hooks/useChatBox";
 import useChat from "../hooks/useChat";
 import "./ChatRoom.css";
 
-const { TabPane } = Tabs;
 const ChatRoom = ({ me, displayStatus }) => {
-  const [messageInput, setMessageInput] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [activeKey, setActiveKey] = useState("")
-  const [activeFriend, setActiveFriend] = useState("")
-  const { chatBoxes, createChatBox, removeChatBox } = useChatBox();
-  const { status, messages, startChat, sendMessage } = useChat();
+  // const [messageInput, setMessageInput] = useState("");
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [activeKey, setActiveKey] = useState("");
+  // const [activeFriend, setActiveFriend] = useState("");
+  // const { chatBoxes, createChatBox, removeChatBox } = useChatBox();
+  // const { status, messages, startChat, sendMessage } = useChat();
+  const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
 
-  const addChatBox = () => { setModalVisible(true); };
+  const onChange = (date, dateString) => {
+    setToday(dateString);
+    if (dateString === "") {
+      setToday(today);
+    }
+  };
+  // const addChatBox = () => {
+  //   setModalVisible(true);
+  // };
 
-  useEffect(() => {
-    updateName(activeKey)
-  }, [activeKey])
+  // useEffect(() => {
+  //   updateName(activeKey);
+  // }, [activeKey]);
 
-  const updateName = (activeKey) => {
-    chatBoxes.map(({ friend, key, chatLog }) => {
-      if(activeKey === key){
-        setActiveFriend(friend);
-        startChat(friend, me);
-      }
-    })
-  }
+  // const updateName = (activeKey) => {
+  //   chatBoxes.map(({ friend, key, chatLog }) => {
+  //     if (activeKey === key) {
+  //       setActiveFriend(friend);
+  //       startChat(friend, me);
+  //     }
+  //   });
+  // };
 
   return (
-    <> <div className="App-title">
-         <h1>{me}'s Chat Room</h1> </div>
-      <div className="App-messages">
-        <Tabs type="editable-card" activeKey={activeKey} onEdit={(targetKey, action) => {
-            if (action === "add") addChatBox()
-            else if (action === "remove") setActiveKey(removeChatBox(targetKey, activeKey));;}}
-             onChange={(key) => { setActiveKey(key) }}>
-          {chatBoxes.map((
-            { friend, key, chatLog }) => {
-              return (
-                 <TabPane tab={friend}
-                   key={key} closable={true}>
-                   {messages.map(({name, body, chatBoxName}) => {
-                     if(chatBoxName === key){
-                       if(name !== me){
-                         return (
-                           <p className="time-left"><span className="sender">{name}</span> <span className="message-box">{body}</span></p>
-                         )
-                       } else {
-                         return (
-                           <p className="time-right"><span className="message-box">{body}</span> <span className="sender">{name}</span></p>
-                         )
-                       }
-                     }
-                   })}
-                 </TabPane>
-              );})}
+    <>
+      <div className="App-title">
+        <Space direction="horizontal">
+          <h1>{today}</h1>
+          <DatePicker onChange={onChange} />
+        </Space>
+      </div>
+      <div className="App-input">
+        <Input style={{ width: "500px" }} placeholder="item"></Input>
+        <Input style={{ width: "100px" }} min={0} defaultValue={0} prefix="$" suffix="TWD"></Input>
+        <Button type="primary" icon={<PlusOutlined />}>
+          Add Item
+        </Button>
+      </div>
+
+      {/* <div className="App-messages">
+        <Tabs
+          type="editable-card"
+          activeKey={activeKey}
+          onEdit={(targetKey, action) => {
+            if (action === "add") addChatBox();
+            else if (action === "remove") setActiveKey(removeChatBox(targetKey, activeKey));
+          }}
+          onChange={(key) => {
+            setActiveKey(key);
+          }}
+        >
+          {chatBoxes.map(({ friend, key, chatLog }) => {
+            return (
+              <TabPane tab={friend} key={key} closable={true}>
+                {messages.map(({ name, body, chatBoxName }) => {
+                  if (chatBoxName === key) {
+                    if (name !== me) {
+                      return (
+                        <p className="time-left">
+                          <span className="sender">{name}</span> <span className="message-box">{body}</span>
+                        </p>
+                      );
+                    } else {
+                      return (
+                        <p className="time-right">
+                          <span className="message-box">{body}</span> <span className="sender">{name}</span>
+                        </p>
+                      );
+                    }
+                  }
+                })}
+              </TabPane>
+            );
+          })}
         </Tabs>
         <ChatModal
           visible={modalVisible}
@@ -71,34 +103,33 @@ const ChatRoom = ({ me, displayStatus }) => {
         />
       </div>
       <Input.Search
-        style={{width:"500px"}}
+        style={{ width: "500px" }}
         value={messageInput}
-        onChange={(e) =>
-          setMessageInput(e.target.value)}
+        onChange={(e) => setMessageInput(e.target.value)}
         enterButton="Send"
-        placeholder=
-          "Enter message here..."
+        placeholder="Enter message here..."
         onSearch={(msg) => {
           if (!msg) {
-             displayStatus({
-               type: "error",
-               msg: "Please enter message.",
-             });
-             return;
-           } else if (activeKey === "") {
-             displayStatus({
-               type: "error",
-               msg: "Please add a chatbox first.",
-             });
-             setMessageInput("");
-             return;
-           }
-           // sendMessage({ key: activeFriend, body: msg });
-           sendMessage(me, activeFriend, msg);
-           setMessageInput("");
-         }}
-       ></Input.Search>
-    </>);
+            displayStatus({
+              type: "error",
+              msg: "Please enter message.",
+            });
+            return;
+          } else if (activeKey === "") {
+            displayStatus({
+              type: "error",
+              msg: "Please add a chatbox first.",
+            });
+            setMessageInput("");
+            return;
+          }
+          // sendMessage({ key: activeFriend, body: msg });
+          sendMessage(me, activeFriend, msg);
+          setMessageInput("");
+        }}
+      ></Input.Search> */}
+    </>
+  );
 };
 
 export default ChatRoom;

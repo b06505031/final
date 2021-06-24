@@ -1,7 +1,6 @@
 import "../App.css";
 import { Input, Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { EyeInvisibleOutlined, EyeTwoTone, SearchOutlined } from "@ant-design/icons";
+import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone, SearchOutlined } from "@ant-design/icons";
 import { useRef } from "react";
 
 const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }) => {
