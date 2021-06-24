@@ -1,11 +1,13 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { Tabs, Input, DatePicker, Space, Button } from "antd";
+import { Input, DatePicker, Space, Button, Table, Tag, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ChatModal from "../Components/ChatModal";
 import useChatBox from "../hooks/useChatBox";
 import useChat from "../hooks/useChat";
 import "./ChatRoom.css";
+
+const { Option } = Select;
 
 const ChatRoom = ({ me, displayStatus }) => {
   // const [messageInput, setMessageInput] = useState("");
@@ -16,14 +18,125 @@ const ChatRoom = ({ me, displayStatus }) => {
   // const { status, messages, startChat, sendMessage } = useChat();
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
+  const [category, setCategory] = useState("");
   const [money, setMoney] = useState(0);
   const [boxes, setBoxes] = useState([]);
+
   const onChange = (date, dateString) => {
     setToday(dateString);
     if (dateString === "") {
       setToday(today);
     }
   };
+  const handleChange = (value) => {
+    // console.log(value);
+    setCategory(value);
+  };
+  const addToBox = () => {
+    if (item === "") {
+      displayStatus({
+        type: "error",
+        msg: "Please enter item.",
+      });
+      return;
+    }
+    const newboxes = boxes;
+    if (newboxes.length === 0) {
+      newboxes.push({ day: today, spending_item: [{ item, money, category }] });
+    } else {
+      for (let box in newboxes) {
+        console.log(newboxes[box].day);
+        console.log(today);
+        if (newboxes[box].day === today) {
+          newboxes[box].spending_item.push({ item, money, category });
+        } else if (box === (newboxes.length - 1).toString() && newboxes[box] !== today) {
+          newboxes.push({ day: today, spending_item: [{ item, money, category }] });
+        }
+      }
+    }
+    setBoxes(newboxes);
+    setItem("");
+    setMoney(0);
+    console.table(boxes);
+  };
+  const columns = [
+    {
+      title: "Item",
+      dataIndex: "item",
+      key: "item",
+      render: (item) => <p style={{ color: "#2db7f5" }}>{item}</p>,
+    },
+    {
+      title: "Dollar",
+      dataIndex: "dollar",
+      key: "dollar",
+      render: (dollar) => <p>{`$${dollar}`}</p>,
+    },
+    {
+      title: "Dollar",
+      dataIndex: "dollar",
+      key: "dollar",
+      render: (dollar) => <p>{`$${dollar}`}</p>,
+    },
+
+    {
+      title: "Category",
+      key: "category",
+      dataIndex: "category",
+      render: (tags) => (
+        <>
+          {tags.map((tag) => {
+            let color = "green";
+            if (tag === "Housing") color = "magenta";
+            if (tag === "Transportation") color = "red";
+            if (tag === "Food") color = "volcano";
+            if (tag === "Utilities") color = "orange";
+            if (tag === "Insurance") color = "gold";
+            if (tag === "Medical") color = "lime";
+            if (tag === "Saving, Investing, & Debt Payments") color = "green";
+            if (tag === "Entertainment") color = "cyan";
+            if (tag === "Miscellaneous") color = "purple";
+
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <Space size="middle">
+          <a>Delete</a>
+        </Space>
+      ),
+    },
+  ];
+  const data = [
+    {
+      key: "1",
+      item: "candy",
+      dollar: 10,
+      category: ["Housing", "Food"],
+    },
+    {
+      key: "2",
+      item: "cake",
+      dollar: 150,
+      category: ["Entertainment"],
+    },
+    {
+      key: "3",
+      item: "meat",
+      dollar: 70,
+      category: ["Insurance", "Food"],
+    },
+  ];
+  // console.table(data);
   // const addChatBox = () => {
   //   setModalVisible(true);
   // };
@@ -51,11 +164,22 @@ const ChatRoom = ({ me, displayStatus }) => {
       </div>
       <div className="App-input">
         <Input
-          style={{ width: "500px" }}
+          style={{ width: "300px" }}
           placeholder="item"
           value={item}
           onChange={(e) => setItem(e.target.value)}
         ></Input>
+        <Select style={{ width: "200px" }} defaultValue="Housing" onChange={handleChange}>
+          <Option value="Housing">Housing</Option>
+          <Option value="Transportation">Transportation</Option>
+          <Option value="Food">Food</Option>
+          <Option value="Utilities">Utilities</Option>
+          <Option value="Insurance">Insurance</Option>
+          <Option value="Medical">Medical</Option>
+          <Option value="Investing">Saving, Investing, & Debt Payments</Option>
+          <Option value="Entertainment">Entertainment</Option>
+          <Option value="Miscellaneous">Miscellaneous</Option>
+        </Select>
         <Input
           style={{ width: "100px" }}
           min={0}
@@ -65,36 +189,12 @@ const ChatRoom = ({ me, displayStatus }) => {
           value={money}
           onChange={(e) => setMoney(e.target.value)}
         ></Input>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            if (item === "") {
-              displayStatus({
-                type: "error",
-                msg: "Please enter item.",
-              });
-              return;
-            }
-            const newboxes = boxes;
-            for (let box in newboxes) {
-              if (newboxes[box].day === today) {
-                newboxes[box].spending_item.push({ item, money });
-              } else if (box === (newboxes.length - 1).toString()) {
-                newboxes.push({ day: today, spending_item: [{ item, money }] });
-              }
-            }
-            if (newboxes.length === 0) {
-              newboxes.push({ day: today, spending_item: [{ item, money }] });
-            }
-            setBoxes(newboxes);
-            setItem("");
-            setMoney(0);
-            console.log(boxes);
-          }}
-        >
+        <Button style={{ width: "100px" }} type="primary" icon={<PlusOutlined />} onClick={addToBox}>
           Add
         </Button>
+      </div>
+      <div className="App-textarea">
+        <Table style={{ width: "700px" }} columns={columns} dataSource={data}></Table>
       </div>
 
       {/* <div className="App-messages">
