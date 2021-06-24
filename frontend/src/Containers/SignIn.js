@@ -26,7 +26,7 @@ const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }
         }}
       ></Input>
       <Input.Password
-        placeholder="input password"
+        placeholder="password"
         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         size="large"
         style={{ width: 300 }}

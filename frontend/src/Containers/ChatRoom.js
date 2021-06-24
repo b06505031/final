@@ -15,7 +15,9 @@ const ChatRoom = ({ me, displayStatus }) => {
   // const { chatBoxes, createChatBox, removeChatBox } = useChatBox();
   // const { status, messages, startChat, sendMessage } = useChat();
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
-
+  const [item, setItem] = useState("");
+  const [money, setMoney] = useState(0);
+  const [boxes, setBoxes] = useState([]);
   const onChange = (date, dateString) => {
     setToday(dateString);
     if (dateString === "") {
@@ -48,10 +50,50 @@ const ChatRoom = ({ me, displayStatus }) => {
         </Space>
       </div>
       <div className="App-input">
-        <Input style={{ width: "500px" }} placeholder="item"></Input>
-        <Input style={{ width: "100px" }} min={0} defaultValue={0} prefix="$" suffix="TWD"></Input>
-        <Button type="primary" icon={<PlusOutlined />}>
-          Add Item
+        <Input
+          style={{ width: "500px" }}
+          placeholder="item"
+          value={item}
+          onChange={(e) => setItem(e.target.value)}
+        ></Input>
+        <Input
+          style={{ width: "100px" }}
+          min={0}
+          defaultValue={0}
+          prefix="$"
+          suffix="TWD"
+          value={money}
+          onChange={(e) => setMoney(e.target.value)}
+        ></Input>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            if (item === "") {
+              displayStatus({
+                type: "error",
+                msg: "Please enter item.",
+              });
+              return;
+            }
+            const newboxes = boxes;
+            for (let box in newboxes) {
+              if (newboxes[box].day === today) {
+                newboxes[box].spending_item.push({ item, money });
+              } else if (box === (newboxes.length - 1).toString()) {
+                newboxes.push({ day: today, spending_item: [{ item, money }] });
+              }
+            }
+            if (newboxes.length === 0) {
+              newboxes.push({ day: today, spending_item: [{ item, money }] });
+            }
+            setBoxes(newboxes);
+            setItem("");
+            setMoney(0);
+            console.log(boxes);
+          }}
+        >
+          Add
         </Button>
       </div>
 
