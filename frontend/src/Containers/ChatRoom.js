@@ -194,7 +194,7 @@ const ChatRoom = ({ me, displayStatus }) => {
         </Button>
       </div>
       <div className="App-textarea">
-        <Table style={{ width: "700px" }} columns={columns} dataSource={data}></Table>
+        <Table style={{ width: "700px", margin: "10px" }} columns={columns} dataSource={data}></Table>
       </div>
 
       {/* <div className="App-messages">
