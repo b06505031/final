@@ -1,6 +1,6 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { Input, DatePicker, Space, Button, Table, Tag, Select } from "antd";
+import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions } from "antd";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import ChatModal from "../Components/ChatModal";
 import useChatBox from "../hooks/useChatBox";
@@ -14,6 +14,7 @@ const ChatRoom = ({ me, displayStatus }) => {
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
   const [dollar, setDollar] = useState(0);
+  // const [totalcost, setTotalcost] = useState(0);
   const [boxes, setBoxes] = useState([]);
 
   const onChange = (date, dateString) => {
@@ -48,6 +49,18 @@ const ChatRoom = ({ me, displayStatus }) => {
     setItem("");
     setDollar(0);
     // console.table(boxes);
+  };
+
+  const calTotalCost = (boxes) => {
+    let total = 0;
+    for (let i in boxes) {
+      if (boxes[i].day === today) {
+        for (let key in boxes[i]["spending_item"]) {
+          total += Number(boxes[i]["spending_item"][key].dollar);
+        }
+      }
+    }
+    return total;
   };
 
   const columns = [
@@ -121,7 +134,7 @@ const ChatRoom = ({ me, displayStatus }) => {
     }
     return data;
   };
-  console.table(boxes); // console.log(dataToday(boxes));
+  // console.log(dataToday(boxes));
 
   return (
     <>
@@ -164,6 +177,13 @@ const ChatRoom = ({ me, displayStatus }) => {
       </div>
       <div className="App-textarea">
         <Table style={{ width: "700px", margin: "10px" }} columns={columns} dataSource={dataToday(boxes)}></Table>
+      </div>
+      <div className="App-total_cost">
+        <Descriptions bordered>
+          <Descriptions.Item label="Total Cost" labelStyle={{ background: "#d9d9d9" }}>{`${calTotalCost(
+            boxes
+          )}  TWD`}</Descriptions.Item>
+        </Descriptions>
       </div>
     </>
   );
