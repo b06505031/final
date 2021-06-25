@@ -93,6 +93,7 @@ const ChatRoom = ({ me, displayStatus }) => {
                 style={{
                   height: "30px",
                   fontSize: "20px",
+                  borderRadius: "5px",
                   lineHeight: "30px",
                   fontFamily: "Concert One,cursive",
                 }}
