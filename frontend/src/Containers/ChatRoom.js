@@ -18,7 +18,7 @@ const ChatRoom = ({ me, displayStatus }) => {
   // const { status, messages, startChat, sendMessage } = useChat();
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Housing");
   const [money, setMoney] = useState(0);
   const [boxes, setBoxes] = useState([]);
 
@@ -28,10 +28,7 @@ const ChatRoom = ({ me, displayStatus }) => {
       setToday(today);
     }
   };
-  const handleChange = (value) => {
-    // console.log(value);
-    setCategory(value);
-  };
+
   const addToBox = () => {
     if (item === "") {
       displayStatus({
@@ -45,10 +42,9 @@ const ChatRoom = ({ me, displayStatus }) => {
       newboxes.push({ day: today, spending_item: [{ item, money, category }] });
     } else {
       for (let box in newboxes) {
-        console.log(newboxes[box].day);
-        console.log(today);
         if (newboxes[box].day === today) {
           newboxes[box].spending_item.push({ item, money, category });
+          break;
         } else if (box === (newboxes.length - 1).toString() && newboxes[box] !== today) {
           newboxes.push({ day: today, spending_item: [{ item, money, category }] });
         }
@@ -111,7 +107,7 @@ const ChatRoom = ({ me, displayStatus }) => {
     {
       title: "Action",
       key: "action",
-      render: (text, record) => (
+      render: () => (
         <Space size="middle">
           <button className="item-delete" style={{ fontSize: "10px", borderColor: "transparent", borderRadius: "50%" }}>
             <CloseOutlined />
@@ -138,6 +134,18 @@ const ChatRoom = ({ me, displayStatus }) => {
       item: "meat",
       dollar: 70,
       category: ["Insurance", "Food"],
+    },
+    {
+      key: "4",
+      item: "egg",
+      dollar: "8",
+      category: ["Food"],
+    },
+    {
+      key: "5",
+      item: "mask",
+      dollar: "100",
+      category: ["Medical"],
     },
   ];
   // console.table(data);
@@ -173,7 +181,7 @@ const ChatRoom = ({ me, displayStatus }) => {
           value={item}
           onChange={(e) => setItem(e.target.value)}
         ></Input>
-        <Select style={{ width: "200px" }} defaultValue="Housing" onChange={handleChange}>
+        <Select style={{ width: "200px" }} defaultValue="Housing" onChange={(value) => setCategory(value)}>
           <Option value="Housing">Housing</Option>
           <Option value="Transportation">Transportation</Option>
           <Option value="Food">Food</Option>
