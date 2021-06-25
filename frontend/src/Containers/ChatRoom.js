@@ -112,8 +112,8 @@ const ChatRoom = ({ me, displayStatus }) => {
       },
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Delete",
+      key: "delete",
       render: () => (
         <Space size="middle">
           <button className="item-delete" style={{ fontSize: "10px", borderColor: "transparent", borderRadius: "50%" }}>
