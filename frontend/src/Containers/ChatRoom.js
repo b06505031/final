@@ -186,7 +186,7 @@ const ChatRoom = ({ me, displayStatus }) => {
       </div>
       <div className="App-total_cost">
         <Descriptions bordered>
-          <Descriptions.Item label="Total Cost" labelStyle={{ background: "#d9d9d9" }}>{`${calTotalCost(
+          <Descriptions.Item label="Total Spend" labelStyle={{ background: "#d9d9d9" }}>{`${calTotalCost(
             boxes
           )}  TWD`}</Descriptions.Item>
         </Descriptions>
