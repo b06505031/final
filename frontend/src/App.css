@@ -8,8 +8,24 @@
   width: 100vw;
   margin: auto;
   background: linear-gradient(0.4turn, #3f87a6, #ebf8e1, #f69d3c);
+  background-repeat: no-repeat;
+  background-size: 300% 300%;
+  animation: gradient 10s ease infinite;
 }
 
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
 .App-title {
   display: flex;
   align-items: center;
