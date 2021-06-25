@@ -1,7 +1,7 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { Input, DatePicker, Space, Button, Table, Tag, Select } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import ChatModal from "../Components/ChatModal";
 import useChatBox from "../hooks/useChatBox";
 import useChat from "../hooks/useChat";
@@ -64,21 +64,14 @@ const ChatRoom = ({ me, displayStatus }) => {
       title: "Item",
       dataIndex: "item",
       key: "item",
-      render: (item) => <p style={{ color: "#2db7f5" }}>{item}</p>,
+      render: (item) => <p style={{ color: "#2db7f5", fontSize: "20px", fontFamily: "Courgette,cursive" }}>{item}</p>,
     },
     {
       title: "Dollar",
       dataIndex: "dollar",
       key: "dollar",
-      render: (dollar) => <p>{`$${dollar}`}</p>,
+      render: (dollar) => <p style={{ fontSize: "20px" }}>{`$${dollar}`}</p>,
     },
-    {
-      title: "Dollar",
-      dataIndex: "dollar",
-      key: "dollar",
-      render: (dollar) => <p>{`$${dollar}`}</p>,
-    },
-
     {
       title: "Category",
       key: "category",
@@ -98,7 +91,16 @@ const ChatRoom = ({ me, displayStatus }) => {
             if (tag === "Miscellaneous") color = "purple";
 
             return (
-              <Tag color={color} key={tag}>
+              <Tag
+                color={color}
+                key={tag}
+                style={{
+                  height: "30px",
+                  fontSize: "20px",
+                  lineHeight: "30px",
+                  fontFamily: "Concert One,cursive",
+                }}
+              >
                 {tag.toUpperCase()}
               </Tag>
             );
@@ -111,7 +113,9 @@ const ChatRoom = ({ me, displayStatus }) => {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>Delete</a>
+          <button className="item-delete" style={{ fontSize: "10px", borderColor: "transparent", borderRadius: "50%" }}>
+            <CloseOutlined />
+          </button>
         </Space>
       ),
     },
