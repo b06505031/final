@@ -51,4 +51,5 @@
 
 .item-delete:hover {
   color: #f5222d;
+  cursor: pointer;
 }

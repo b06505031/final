@@ -121,8 +121,8 @@ const ChatRoom = ({ me, displayStatus }) => {
     }
     return data;
   };
-  // console.log(dataToday(boxes));
-  useEffect(() => {}, [boxes]);
+  console.table(boxes); // console.log(dataToday(boxes));
+
   return (
     <>
       <div className="App-title">
