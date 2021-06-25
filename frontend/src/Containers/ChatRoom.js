@@ -14,7 +14,6 @@ const ChatRoom = ({ me, displayStatus }) => {
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
   const [dollar, setDollar] = useState(0);
-  // const [totalcost, setTotalcost] = useState(0);
   const [boxes, setBoxes] = useState([]);
 
   const onChange = (date, dateString) => {
@@ -68,18 +67,21 @@ const ChatRoom = ({ me, displayStatus }) => {
       title: "Item",
       dataIndex: "item",
       key: "item",
+      width: "30%",
       render: (item) => <p style={{ color: "#2db7f5", fontSize: "20px", fontFamily: "Courgette,cursive" }}>{item}</p>,
     },
     {
       title: "Dollar",
       dataIndex: "dollar",
       key: "dollar",
+      width: "20%",
       render: (dollar) => <p style={{ fontSize: "20px" }}>{`$${dollar}`}</p>,
     },
     {
       title: "Category",
       key: "category",
       dataIndex: "category",
+      width: "35%",
       render: (tag) => {
         let color = "green";
         if (tag === "Housing") color = "magenta";
@@ -129,7 +131,7 @@ const ChatRoom = ({ me, displayStatus }) => {
         for (let key in boxes[i]["spending_item"]) {
           boxes[i]["spending_item"][key]["key"] = Number(key) + 1;
         }
-        data = boxes[i].spending_item;
+        data = [...boxes[i].spending_item];
       }
     }
     return data;
@@ -177,11 +179,12 @@ const ChatRoom = ({ me, displayStatus }) => {
       </div>
       <div className="App-textarea">
         <Table
+          // bordered
           style={{ width: "700px", margin: "10px", height: "300px" }}
           columns={columns}
           dataSource={dataToday(boxes)}
           pagination={{ pageSize: 5 }}
-          scroll={{ y: 250 }}
+          scroll={{ y: 252 }}
         ></Table>
       </div>
       <div className="App-total_cost">
