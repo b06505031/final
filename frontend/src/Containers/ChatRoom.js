@@ -10,12 +10,6 @@ import "./ChatRoom.css";
 const { Option } = Select;
 
 const ChatRoom = ({ me, displayStatus }) => {
-  // const [messageInput, setMessageInput] = useState("");
-  // const [modalVisible, setModalVisible] = useState(false);
-  // const [activeKey, setActiveKey] = useState("");
-  // const [activeFriend, setActiveFriend] = useState("");
-  // const { chatBoxes, createChatBox, removeChatBox } = useChatBox();
-  // const { status, messages, startChat, sendMessage } = useChat();
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
@@ -55,6 +49,7 @@ const ChatRoom = ({ me, displayStatus }) => {
     setDollar(0);
     // console.table(boxes);
   };
+
   const columns = [
     {
       title: "Item",
@@ -113,38 +108,7 @@ const ChatRoom = ({ me, displayStatus }) => {
       ),
     },
   ];
-  // const data = [
-  //   {
-  //     key: "1",
-  //     item: "candy",
-  //     dollar: 10,
-  //     category: ["Housing", "Food"],
-  //   },
-  //   {
-  //     key: "2",
-  //     item: "cake",
-  //     dollar: 150,
-  //     category: ["Entertainment"],
-  //   },
-  //   {
-  //     key: "3",
-  //     item: "meat",
-  //     dollar: 70,
-  //     category: ["Insurance", "Food"],
-  //   },
-  //   {
-  //     key: "4",
-  //     item: "egg",
-  //     dollar: "8",
-  //     category: ["Food"],
-  //   },
-  //   {
-  //     key: "5",
-  //     item: "mask",
-  //     dollar: "100",
-  //     category: ["Medical"],
-  //   },
-  // ];
+
   const dataToday = (boxes) => {
     let data = [];
     for (let i in boxes) {
@@ -157,7 +121,6 @@ const ChatRoom = ({ me, displayStatus }) => {
     }
     return data;
   };
-  // console.log(data);
   // console.log(dataToday(boxes));
   useEffect(() => {}, [boxes]);
   return (
@@ -202,80 +165,6 @@ const ChatRoom = ({ me, displayStatus }) => {
       <div className="App-textarea">
         <Table style={{ width: "700px", margin: "10px" }} columns={columns} dataSource={dataToday(boxes)}></Table>
       </div>
-
-      {/* <div className="App-messages">
-        <Tabs
-          type="editable-card"
-          activeKey={activeKey}
-          onEdit={(targetKey, action) => {
-            if (action === "add") addChatBox();
-            else if (action === "remove") setActiveKey(removeChatBox(targetKey, activeKey));
-          }}
-          onChange={(key) => {
-            setActiveKey(key);
-          }}
-        >
-          {chatBoxes.map(({ friend, key, chatLog }) => {
-            return (
-              <TabPane tab={friend} key={key} closable={true}>
-                {messages.map(({ name, body, chatBoxName }) => {
-                  if (chatBoxName === key) {
-                    if (name !== me) {
-                      return (
-                        <p className="time-left">
-                          <span className="sender">{name}</span> <span className="message-box">{body}</span>
-                        </p>
-                      );
-                    } else {
-                      return (
-                        <p className="time-right">
-                          <span className="message-box">{body}</span> <span className="sender">{name}</span>
-                        </p>
-                      );
-                    }
-                  }
-                })}
-              </TabPane>
-            );
-          })}
-        </Tabs>
-        <ChatModal
-          visible={modalVisible}
-          onCreate={({ name }) => {
-            setActiveKey(createChatBox(name, me));
-            setModalVisible(false);
-          }}
-          onCancel={() => {
-            setModalVisible(false);
-          }}
-        />
-      </div>
-      <Input.Search
-        style={{ width: "500px" }}
-        value={messageInput}
-        onChange={(e) => setMessageInput(e.target.value)}
-        enterButton="Send"
-        placeholder="Enter message here..."
-        onSearch={(msg) => {
-          if (!msg) {
-            displayStatus({
-              type: "error",
-              msg: "Please enter message.",
-            });
-            return;
-          } else if (activeKey === "") {
-            displayStatus({
-              type: "error",
-              msg: "Please add a chatbox first.",
-            });
-            setMessageInput("");
-            return;
-          }
-          // sendMessage({ key: activeFriend, body: msg });
-          sendMessage(me, activeFriend, msg);
-          setMessageInput("");
-        }}
-      ></Input.Search> */}
     </>
   );
 };
