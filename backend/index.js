@@ -17,30 +17,33 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   name: { type: String, required: true },
-  chatBoxes: [{ type: mongoose.Types.ObjectId, ref: 'ChatBox' }],
+  password:{type: String, required: true},
+  dateBoxes: [{ type: mongoose.Types.ObjectId, ref: 'DateBox' }],
 });
 
-const messageSchema = new Schema({
-  chatBox: { type: mongoose.Types.ObjectId, ref: 'ChatBox' },
-  sender: { type: mongoose.Types.ObjectId, ref: 'User' },
-  body: { type: String, required: true },
+const dataSchema = new Schema({
+  dateBox: { type: mongoose.Types.ObjectId, ref: 'DateBox' },
+  user: { type: mongoose.Types.ObjectId, ref: 'User' },
+  item: { type: String, required: true },
+  category: { type: String, required: true },
+  dollar: { type: String, required: true },
 });
 
-const chatBoxSchema = new Schema({
+const dateBoxSchema = new Schema({
   name: { type: String, required: true },
-  users: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-  messages: [{ type: mongoose.Types.ObjectId, ref: 'Message' }],
+  user: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+  datas: [{ type: mongoose.Types.ObjectId, ref: 'Data' }],
 });
 
 const UserModel = mongoose.model('User', userSchema);
-const ChatBoxModel = mongoose.model('ChatBox', chatBoxSchema);
-const MessageModel = mongoose.model('Message', messageSchema);
+const DateBoxModel = mongoose.model('DateBox', dateBoxSchema);
+const DataModel = mongoose.model('Data', dataSchema);
 
 /* -------------------------------------------------------------------------- */
 /*                                  UTILITIES                                 */
 /* -------------------------------------------------------------------------- */
-const makeName = (name, to) => {
-  return [name, to].sort().join('_');
+const makeName = (name, date) => {
+  return [name, date].sort().join('_');
 };
 
 /* -------------------------------------------------------------------------- */
@@ -89,7 +92,7 @@ wss.on('connection', function connection(client) {
   client.box = ''; // keep track of client's CURRENT chat box
 
   client.sendEvent = (e) => client.send(JSON.stringify(e));
-
+  
   client.on('message', async function incoming(message) {
     message = JSON.parse(message);
     // console.log(message);
@@ -165,11 +168,45 @@ wss.on('connection', function connection(client) {
           });
         });
       }
+      case 'CHECK':{
+        const {
+          data: { name, password },
+        } = message;
+        const existuser=await UserModel.findOne({name})
+        if(!existuser){
+          const user =new UserModel({name:name,password:password});
+          await user.save();
+          client.sendEvent({
+            type: 'CHECK',
+            data: {
+              login:true
+              }
+          });
+        }else{
+          if(existuser.password!==password){
+            console.log("password ERROR")
+            client.sendEvent({
+              type: 'CHECK',
+              data: {
+                login:false
+                }
+            });
+          }
+          else if(existuser.password===password){
+            client.sendEvent({
+              type: 'CHECK',
+              data: {
+                login:true
+                }
+            });
+          }
+        }
+      }
     }
 
     // disconnected
     client.once('close', () => {
-      chatBoxes[client.box].delete(client);
+      // chatBoxes[client.box].delete(client);
     });
   });
 });

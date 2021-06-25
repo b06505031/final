@@ -5,7 +5,7 @@ const client = new WebSocket('ws://localhost:4000');
 const useChat = () => {
   const [status, setStatus] = useState({}); // { type, msg }
   const [messages, setMessages] = useState([]);
-
+  const [login,setLogin] =useState(false)
   const waitForOpenSocket = () => {
         return new Promise((resolve, reject) => {
             const maxNumberOfAttempts = 10
@@ -59,6 +59,16 @@ const useChat = () => {
       data: { to: to, name: name, body: input },
     });
   };
+  const sendUser = (name, password) => {
+    if (!name || !password) {
+      throw new Error('Empty input!');
+    }
+
+    client.sendEvent({
+      type: 'CHECK',
+      data: { name: name, password: password},
+    });
+  };
 
   const onEvent = (e) => {
     const { type } = e;
@@ -75,11 +85,16 @@ const useChat = () => {
         setMessages(oldMessage => [...oldMessage, e.data.message]);
         break;
       }
+      case 'CHECK':{
+        setLogin(e.data.login);
+        // console.log(e.data.login)
+        break;
+      }
       default: break;
     }
   };
 
-  return { status, messages, startChat, sendMessage };
+  return { status, messages,login, startChat, sendMessage ,sendUser};
 };
 
 export default useChat;
