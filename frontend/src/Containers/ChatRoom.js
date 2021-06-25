@@ -176,7 +176,13 @@ const ChatRoom = ({ me, displayStatus }) => {
         </Button>
       </div>
       <div className="App-textarea">
-        <Table style={{ width: "700px", margin: "10px" }} columns={columns} dataSource={dataToday(boxes)}></Table>
+        <Table
+          style={{ width: "700px", margin: "10px", height: "300px" }}
+          columns={columns}
+          dataSource={dataToday(boxes)}
+          pagination={{ pageSize: 5 }}
+          scroll={{ y: 250 }}
+        ></Table>
       </div>
       <div className="App-total_cost">
         <Descriptions bordered>
