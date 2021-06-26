@@ -1,5 +1,5 @@
 import "../App.css";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions } from "antd";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 // import ChatModal from "../Components/ChatModal";
@@ -15,23 +15,21 @@ const ChatRoom = ({ me, displayStatus }) => {
   const [category, setCategory] = useState("Housing");
   const [dollar, setDollar] = useState(0);
   const [boxes, setBoxes] = useState([]);
-  const {items,startDate,sendItem}=useChat();
+  const { items, startDate, sendItem } = useChat(displayStatus);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    if(!open){
-      startDate(me,today);
-      setOpen(true)
+    if (!open) {
+      startDate(me, today);
+      setOpen(true);
     }
-  }, [open])
+  }, [open]);
   const onChange = (date, dateString) => {
     setToday(dateString);
     if (dateString === "") {
       setToday(today);
-      
-      
     }
   };
-  
+
   // console.log(items)
   const addToBox = () => {
     if (item === "") {
@@ -54,8 +52,8 @@ const ChatRoom = ({ me, displayStatus }) => {
         }
       }
     }
-    sendItem(me,today,item, category,dollar)
-    console.log(items)
+    sendItem(me, today, item, category, dollar);
+    console.log(items);
     setBoxes(newboxes);
     setItem("");
     setDollar(0);

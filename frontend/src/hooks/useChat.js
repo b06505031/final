@@ -99,13 +99,13 @@ const useChat = (displayStatus) => {
         break;
       }
       case "CHECK": {
+        setLogin(e.data.login);
         if (e.data.login === false) {
           displayStatus({
             type: "error",
             msg: "Wrong password",
           });
         }
-        setLogin(e.data.login);
         // console.log(e.data.login)
         break;
       }
