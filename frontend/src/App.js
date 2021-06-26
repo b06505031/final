@@ -1,7 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import SignIn from "./Containers/SignIn"
-import ChatRoom from "./Containers/ChatRoom"
+import SignIn from "./Containers/SignIn";
+import ChatRoom from "./Containers/ChatRoom";
 import { message } from "antd";
 
 const LOCALSTORAGE_KEY = "save-me";
@@ -10,24 +10,25 @@ const App = () => {
   const savedMe = localStorage.getItem(LOCALSTORAGE_KEY);
   const [signedIn, setSignedIn] = useState(false);
   const [me, setMe] = useState(savedMe || "");
-  const [password,setPassword]=useState("")
+  const [password, setPassword] = useState("");
   const displayStatus = (payload) => {
-    if(payload.msg) {
-      const {type, msg} = payload
+    if (payload.msg) {
+      const { type, msg } = payload;
       const content = {
-        content: msg, duration: 0.5
-      }
+        content: msg,
+        duration: 0.5,
+      };
       switch (type) {
         case "success":
-          message.success(content)
-          break
+          message.success(content);
+          break;
         case "error":
         default:
-          message.error(content)
-          break
+          message.error(content);
+          break;
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (signedIn) {
@@ -41,9 +42,18 @@ const App = () => {
 
   return (
     <div className="App">
-      {signedIn ? 
-      (<ChatRoom me={me} displayStatus={displayStatus}/>) : 
-      (<SignIn me={me} setMe={setMe} password={password}  setPassword={setPassword} setSignedIn={setSignedIn} displayStatus={displayStatus}/>)}
+      {signedIn ? (
+        <ChatRoom me={me} displayStatus={displayStatus} setSignedIn={setSignedIn} />
+      ) : (
+        <SignIn
+          me={me}
+          setMe={setMe}
+          password={password}
+          setPassword={setPassword}
+          setSignedIn={setSignedIn}
+          displayStatus={displayStatus}
+        />
+      )}
     </div>
   );
 };
