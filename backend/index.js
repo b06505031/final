@@ -55,7 +55,7 @@ const wss = new WebSocket.Server({
   server,
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 const validateUser = async (name) => {
   const existing = await UserModel.findOne({ name });
@@ -69,6 +69,16 @@ const validateChatBox = async (name, participants) => {
   return box
     .populate('users')
     .populate({ path: 'messages', populate: 'sender' })
+    .execPopulate();
+};
+
+const validateDateBox = async (name,user) => {
+
+  let box = await DateBoxModel.findOne({ name });
+  if (!box) box = await new DateBoxModel({ name ,user}).save();
+  return box
+    .populate('user')
+    // .populate({ path: 'messages', populate: 'sender' })
     .execPopulate();
 };
 
@@ -86,7 +96,7 @@ const validateChatBox = async (name, participants) => {
 // })();
 
 const chatBoxes = {}; // keep track of all open AND active chat boxes
-
+const dateBoxes ={}
 wss.on('connection', function connection(client) {
   client.id = v4();
   client.box = ''; // keep track of client's CURRENT chat box
@@ -100,6 +110,37 @@ wss.on('connection', function connection(client) {
 
     switch (type) {
       // on open chat box
+      case 'OPEN':{
+        const {
+          data: { name, date },
+        } = message;
+        
+        const dateBoxName = makeName(name, date);
+        const user = await validateUser(name);
+        const dateBox =await validateDateBox(dateBoxName, user);
+        if (dateBoxes[client.box]){
+          // user was in another chat box
+          dateBoxes[client.box].delete(client);
+        }
+        client.box = dateBoxName;
+        if (!dateBoxes[dateBoxName]) dateBoxes[dateBoxName] = new Set(); // make new record for chatbox
+        dateBoxes[dateBoxName].add(client);
+        console.log(name)
+        client.sendEvent({
+          type: 'OPEN',
+          data: {
+            datas: dateBox.datas.map(({ user: { name}, item,category,dollar }) => ({
+              name,
+              item,
+              category,
+              dollar,
+              dateBoxName,
+            })),
+          },
+        });
+
+        break;
+      }
       case 'CHAT': {
         const {
           data: { name, to },
@@ -135,7 +176,35 @@ wss.on('connection', function connection(client) {
 
         break;
       }
+      case 'UPLOAD':{
+        const {
+          data: { name, date, item,category,dollar },
+        } = message;
+        const dateBoxName = makeName(name, date);
 
+        const user = await validateUser(name);
+        const dateBox = await validateDateBox(dateBoxName, user);
+        const newItem = new DataModel({ user, item,category,dollar });
+        await newItem.save();
+        dateBox.datas.push(newItem);
+        await dateBox.save();
+
+        dateBoxes[dateBoxName].forEach((client) => {
+          // console.log("send message");
+          client.sendEvent({
+            type: 'UPLOAD',
+            data: {
+              data: {
+                name,
+                item,
+                category,
+                dollar,
+                dateBoxName
+              },
+            },
+          });
+        });
+      }
       case 'MESSAGE': {
         const {
           data: { name, to, body },

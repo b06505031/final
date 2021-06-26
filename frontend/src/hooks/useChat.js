@@ -4,7 +4,7 @@ const client = new WebSocket('ws://localhost:4000');
 
 const useChat = () => {
   const [status, setStatus] = useState({}); // { type, msg }
-  const [messages, setMessages] = useState([]);
+  const [items, setItems] = useState([]);
   const [login,setLogin] =useState(false)
   const waitForOpenSocket = () => {
         return new Promise((resolve, reject) => {
@@ -38,25 +38,26 @@ const useChat = () => {
         client.send(JSON.stringify(m))
   }
 
-  const startChat = (name, to) => {
-    if (!name || !to) {
+  const startDate = (name, date) => {
+    if (!name || !date) {
       throw new Error('Fill in the inputs');
     }
 
     client.sendEvent({
-      type: 'CHAT',
-      data: { to: to, name: name },
+      type: 'OPEN',
+      data: { name: name, date: date },
     });
+    // console.log(name,date)
   };
 
-  const sendMessage = (name, to, input) => {
-    if (!input || !name || !to) {
+  const sendItem = (name, date, item,category,dollar) => {
+    if (!name || !date || !item||!category||!dollar) {
       throw new Error('Empty input!');
     }
 
     client.sendEvent({
-      type: 'MESSAGE',
-      data: { to: to, name: name, body: input },
+      type: 'UPLOAD',
+      data: { name: name, date: date, item: item, category:category,dollar:dollar},
     });
   };
   const sendUser = (name, password) => {
@@ -75,14 +76,21 @@ const useChat = () => {
     // console.log(e);
 
     switch (type) {
+      case 'OPEN': {
+        // console.log(e.data.messages);
+        console.log(e.data)
+        setItems(e.data.datas)
+        // setMessages(e.data.messages);
+        break;
+      }
       case 'CHAT': {
         // console.log(e.data.messages);
-        setMessages(e.data.messages);
+        // setMessages(e.data.messages);
         break;
       }
       case 'MESSAGE': {
         // console.log(e.data.message);
-        setMessages(oldMessage => [...oldMessage, e.data.message]);
+        // setMessages(oldMessage => [...oldMessage, e.data.message]);
         break;
       }
       case 'CHECK':{
@@ -94,7 +102,7 @@ const useChat = () => {
     }
   };
 
-  return { status, messages,login, startChat, sendMessage ,sendUser};
+  return { status, items,login, startDate, sendItem ,sendUser};
 };
 
 export default useChat;

@@ -1,10 +1,10 @@
 import "../App.css";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions } from "antd";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 // import ChatModal from "../Components/ChatModal";
 // import useChatBox from "../hooks/useChatBox";
-// import useChat from "../hooks/useChat";
+import useChat from "../hooks/useChat";
 import "./ChatRoom.css";
 
 const { Option } = Select;
@@ -15,14 +15,24 @@ const ChatRoom = ({ me, displayStatus }) => {
   const [category, setCategory] = useState("Housing");
   const [dollar, setDollar] = useState(0);
   const [boxes, setBoxes] = useState([]);
-
+  const {items,startDate,sendItem}=useChat();
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if(!open){
+      startDate(me,today);
+      setOpen(true)
+    }
+  }, [open])
   const onChange = (date, dateString) => {
     setToday(dateString);
     if (dateString === "") {
       setToday(today);
+      
+      
     }
   };
-
+  
+  // console.log(items)
   const addToBox = () => {
     if (item === "") {
       displayStatus({
@@ -44,6 +54,7 @@ const ChatRoom = ({ me, displayStatus }) => {
         }
       }
     }
+    sendItem(me,today,item, category,dollar)
     setBoxes(newboxes);
     setItem("");
     setDollar(0);
@@ -137,7 +148,7 @@ const ChatRoom = ({ me, displayStatus }) => {
     return data;
   };
   // console.log(dataToday(boxes));
-
+  // console.log(items)
   return (
     <>
       <div className="App-title">

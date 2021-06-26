@@ -60,9 +60,7 @@ const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }
             });
           else {
             sendUser(me,password)
-            if(login){
-               setSignedIn(login);
-            }
+            
            
             
           }
