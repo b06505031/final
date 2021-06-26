@@ -208,6 +208,7 @@ wss.on('connection', function connection(client) {
             },
           });
         });
+        break;
       }
       // case 'MESSAGE': {
       //   const {
@@ -253,6 +254,7 @@ wss.on('connection', function connection(client) {
             change:true
             }
         });
+        break;
         
       }
       case 'DELETE':{
@@ -260,7 +262,7 @@ wss.on('connection', function connection(client) {
           data: { id },
         } = message;
         const listItem= await DataModel.findByIdAndDelete(id)
-
+        break;
       }
       case 'CHECK':{
         const {
@@ -295,6 +297,7 @@ wss.on('connection', function connection(client) {
             });
           }
         }
+        break;
       }
     }
 
