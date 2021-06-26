@@ -55,6 +55,7 @@ const ChatRoom = ({ me, displayStatus }) => {
       }
     }
     sendItem(me,today,item, category,dollar)
+    console.log(items)
     setBoxes(newboxes);
     setItem("");
     setDollar(0);

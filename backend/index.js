@@ -16,8 +16,8 @@ dotenv.config();
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  name: { type: String, required: true },
-  password:{type: String, required: true},
+  name: { type: String},
+  password:{type: String},
   dateBoxes: [{ type: mongoose.Types.ObjectId, ref: 'DateBox' }],
 });
 
@@ -63,14 +63,14 @@ const validateUser = async (name) => {
   return new UserModel({ name }).save();
 };
 
-const validateChatBox = async (name, participants) => {
-  let box = await ChatBoxModel.findOne({ name });
-  if (!box) box = await new ChatBoxModel({ name, users: participants }).save();
-  return box
-    .populate('users')
-    .populate({ path: 'messages', populate: 'sender' })
-    .execPopulate();
-};
+// const validateChatBox = async (name, participants) => {
+//   let box = await ChatBoxModel.findOne({ name });
+//   if (!box) box = await new ChatBoxModel({ name, users: participants }).save();
+//   return box
+//     .populate('users')
+//     .populate({ path: 'messages', populate: 'sender' })
+//     .execPopulate();
+// };
 
 const validateDateBox = async (name,user) => {
 
@@ -78,7 +78,7 @@ const validateDateBox = async (name,user) => {
   if (!box) box = await new DateBoxModel({ name ,user}).save();
   return box
     .populate('user')
-    // .populate({ path: 'messages', populate: 'sender' })
+    .populate({ path: 'datas', populate: 'user' })
     .execPopulate();
 };
 
@@ -125,12 +125,15 @@ wss.on('connection', function connection(client) {
         client.box = dateBoxName;
         if (!dateBoxes[dateBoxName]) dateBoxes[dateBoxName] = new Set(); // make new record for chatbox
         dateBoxes[dateBoxName].add(client);
-        console.log(name)
+        console.log(dateBox.length)
+          
+        console.log("----------------------------------------------------")
         client.sendEvent({
           type: 'OPEN',
           data: {
-            datas: dateBox.datas.map(({ user: { name}, item,category,dollar }) => ({
+            datas: dateBox.datas.map(({ user: { name }, item,category,dollar }) => ({
               name,
+              // DataModel.findById
               item,
               category,
               dollar,
@@ -141,41 +144,41 @@ wss.on('connection', function connection(client) {
 
         break;
       }
-      case 'CHAT': {
-        const {
-          data: { name, to },
-        } = message;
+      // case 'CHAT': {
+      //   const {
+      //     data: { name, to },
+      //   } = message;
 
-        const chatBoxName = makeName(name, to);
+      //   const chatBoxName = makeName(name, to);
 
-        const sender = await validateUser(name);
-        const receiver = await validateUser(to);
-        const chatBox = await validateChatBox(chatBoxName, [sender, receiver]);
+      //   const sender = await validateUser(name);
+      //   const receiver = await validateUser(to);
+      //   const chatBox = await validateChatBox(chatBoxName, [sender, receiver]);
 
-        // if client was in a chat box, remove that.
-        if (chatBoxes[client.box]){
-          // user was in another chat box
-          chatBoxes[client.box].delete(client);
-        }
+      //   // if client was in a chat box, remove that.
+      //   if (chatBoxes[client.box]){
+      //     // user was in another chat box
+      //     chatBoxes[client.box].delete(client);
+      //   }
 
-        // use set to avoid duplicates
-        client.box = chatBoxName;
-        if (!chatBoxes[chatBoxName]) chatBoxes[chatBoxName] = new Set(); // make new record for chatbox
-        chatBoxes[chatBoxName].add(client); // add this open connection into chat box
+      //   // use set to avoid duplicates
+      //   client.box = chatBoxName;
+      //   if (!chatBoxes[chatBoxName]) chatBoxes[chatBoxName] = new Set(); // make new record for chatbox
+      //   chatBoxes[chatBoxName].add(client); // add this open connection into chat box
 
-        client.sendEvent({
-          type: 'CHAT',
-          data: {
-            messages: chatBox.messages.map(({ sender: { name }, body }) => ({
-              name,
-              body,
-              chatBoxName,
-            })),
-          },
-        });
+      //   client.sendEvent({
+      //     type: 'CHAT',
+      //     data: {
+      //       messages: chatBox.messages.map(({ sender: { name }, body }) => ({
+      //         name,
+      //         body,
+      //         chatBoxName,
+      //       })),
+      //     },
+      //   });
 
-        break;
-      }
+      //   break;
+      // }
       case 'UPLOAD':{
         const {
           data: { name, date, item,category,dollar },
@@ -184,13 +187,13 @@ wss.on('connection', function connection(client) {
 
         const user = await validateUser(name);
         const dateBox = await validateDateBox(dateBoxName, user);
-        const newItem = new DataModel({ user, item,category,dollar });
+        const newItem = new DataModel({ user, item:item,category:category,dollar:dollar });
         await newItem.save();
         dateBox.datas.push(newItem);
         await dateBox.save();
-
+        console.log(item)
         dateBoxes[dateBoxName].forEach((client) => {
-          // console.log("send message");
+          // console.log(client);
           client.sendEvent({
             type: 'UPLOAD',
             data: {
@@ -205,38 +208,38 @@ wss.on('connection', function connection(client) {
           });
         });
       }
-      case 'MESSAGE': {
-        const {
-          data: { name, to, body },
-        } = message;
-        // console.log("get message");
+      // case 'MESSAGE': {
+      //   const {
+      //     data: { name, to, body },
+      //   } = message;
+      //   // console.log("get message");
 
-        const chatBoxName = makeName(name, to);
+      //   const chatBoxName = makeName(name, to);
 
-        const sender = await validateUser(name);
-        const receiver = await validateUser(to);
-        const chatBox = await validateChatBox(chatBoxName, [sender, receiver]);
+      //   const sender = await validateUser(name);
+      //   const receiver = await validateUser(to);
+      //   const chatBox = await validateChatBox(chatBoxName, [sender, receiver]);
 
-        const newMessage = new MessageModel({ sender, body });
-        await newMessage.save();
+      //   const newMessage = new MessageModel({ sender, body });
+      //   await newMessage.save();
 
-        chatBox.messages.push(newMessage);
-        await chatBox.save();
+      //   chatBox.messages.push(newMessage);
+      //   await chatBox.save();
 
-        chatBoxes[chatBoxName].forEach((client) => {
-          // console.log("send message");
-          client.sendEvent({
-            type: 'MESSAGE',
-            data: {
-              message: {
-                name,
-                body,
-                chatBoxName
-              },
-            },
-          });
-        });
-      }
+      //   chatBoxes[chatBoxName].forEach((client) => {
+      //     // console.log("send message");
+      //     client.sendEvent({
+      //       type: 'MESSAGE',
+      //       data: {
+      //         message: {
+      //           name,
+      //           body,
+      //           chatBoxName
+      //         },
+      //       },
+      //     });
+      //   });
+      // }
       case 'CHECK':{
         const {
           data: { name, password },
@@ -253,7 +256,7 @@ wss.on('connection', function connection(client) {
           });
         }else{
           if(existuser.password!==password){
-            console.log("password ERROR")
+            // console.log("password ERROR")
             client.sendEvent({
               type: 'CHECK',
               data: {
@@ -275,7 +278,7 @@ wss.on('connection', function connection(client) {
 
     // disconnected
     client.once('close', () => {
-      // chatBoxes[client.box].delete(client);
+      dateBoxes[client.box].delete(client);
     });
   });
 });

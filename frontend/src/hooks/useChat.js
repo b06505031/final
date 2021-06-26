@@ -51,7 +51,7 @@ const useChat = () => {
   };
 
   const sendItem = (name, date, item,category,dollar) => {
-    if (!name || !date || !item||!category||!dollar) {
+    if (!name || !date || !item||!category) {
       throw new Error('Empty input!');
     }
 
@@ -81,6 +81,11 @@ const useChat = () => {
         console.log(e.data)
         setItems(e.data.datas)
         // setMessages(e.data.messages);
+        break;
+      }
+      case 'UPLOAD': {
+        console.log(e.data.data);
+        setItems(oldItem => [...oldItem, e.data.data]);
         break;
       }
       case 'CHAT': {
