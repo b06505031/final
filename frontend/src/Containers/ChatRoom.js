@@ -10,7 +10,7 @@ import "./ChatRoom.css";
 const { Option } = Select;
 const { SubMenu } = Menu;
 
-const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
+const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
@@ -179,22 +179,25 @@ const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
     return data;
   };
   // console.log(dataToday(boxes));
-  console.log(items)
+  console.log(items);
   return (
     <>
       <div className="App-header">
-        <h1>{me}</h1>
+        <h1>{me}'s Wealth Management</h1>
         <Menu
-          style={{ width: 150, fontWeight: "600" }}
+          style={{ width: 100, fontWeight: "600" }}
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
           mode="horizontal"
         >
           <SubMenu key="sub4" title="Menu" icon={<MenuOutlined />}>
-            <Menu.Item key="1" icon={<SettingOutlined />}
-            onClick={() => {
-              setChangepass(true);
-            }}>
+            <Menu.Item
+              key="1"
+              icon={<SettingOutlined />}
+              onClick={() => {
+                setChangepass(true);
+              }}
+            >
               Change password
             </Menu.Item>
             <Menu.Item
@@ -202,7 +205,6 @@ const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
               icon={<LogoutOutlined />}
               onClick={() => {
                 setSignedIn(false);
-                
               }}
             >
               Logout
@@ -218,7 +220,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
       </div>
       <div className="App-input">
         <Input
-          style={{ width: "300px" }}
+          style={{ width: "300px", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px" }}
           placeholder="item"
           value={item}
           onChange={(e) => setItem(e.target.value)}
@@ -243,7 +245,12 @@ const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
           value={dollar}
           onChange={(e) => setDollar(e.target.value)}
         ></Input>
-        <Button style={{ width: "100px" }} type="primary" icon={<PlusOutlined />} onClick={addToBox}>
+        <Button
+          style={{ width: "100px", borderTopRightRadius: "5px", borderBottomRightRadius: "5px" }}
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={addToBox}
+        >
           Add
         </Button>
       </div>
@@ -261,8 +268,16 @@ const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
         <Descriptions bordered>
           <Descriptions.Item
             label="Total Spend"
-            labelStyle={{ background: "#d9d9d9", fontWeight: "bolder" }}
-            contentStyle={{ fontSize: "15px", fontWeight: "bolder" }}
+            labelStyle={{
+              background: "#d9d9d9",
+              fontWeight: "bolder",
+              borderTopLeftRadius: "15px",
+              borderBottomLeftRadius: "15px",
+            }}
+            contentStyle={{
+              fontSize: "15px",
+              fontWeight: "bolder",
+            }}
           >{`${calTotalCost(items)}  TWD`}</Descriptions.Item>
         </Descriptions>
       </div>
