@@ -64,12 +64,16 @@ const ChatRoom = ({ me, displayStatus }) => {
 
   const calTotalCost = (boxes) => {
     let total = 0;
-    for (let i in boxes) {
-      if (boxes[i].day === today) {
-        for (let key in boxes[i]["spending_item"]) {
-          total += Number(boxes[i]["spending_item"][key].dollar);
-        }
-      }
+    // for (let i in boxes) {
+    //   if (boxes[i].day === today) {
+    //     for (let key in boxes[i]["spending_item"]) {
+    //       total += Number(boxes[i]["spending_item"][key].dollar);
+    //     }
+    //   }
+    // }
+    for (let i in boxes){
+      console.log(boxes[i])
+      total += Number(boxes[i].dollar);
     }
     return total;
   };
@@ -225,7 +229,7 @@ const ChatRoom = ({ me, displayStatus }) => {
             label="Total Spend"
             labelStyle={{ background: "#d9d9d9", fontWeight: "bolder" }}
             contentStyle={{ fontSize: "15px", fontWeight: "bolder" }}
-          >{`${calTotalCost(boxes)}  TWD`}</Descriptions.Item>
+          >{`${calTotalCost(items)}  TWD`}</Descriptions.Item>
         </Descriptions>
       </div>
     </>
