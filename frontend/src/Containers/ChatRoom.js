@@ -1,6 +1,6 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions, Menu } from "antd";
+import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions, Menu, Progress } from "antd";
 import { PlusOutlined, CloseOutlined, SettingOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 // import ChatModal from "../Components/ChatModal";
 // import useChatBox from "../hooks/useChatBox";
@@ -18,6 +18,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
   const [boxes, setBoxes] = useState([]);
   const { items, startDate, sendItem, sendDeleteItem } = useChat(displayStatus);
   const [open, setOpen] = useState(false);
+
   useEffect(() => {
     if (!open) {
       startDate(me, today);
