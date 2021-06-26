@@ -1,7 +1,7 @@
 import "../App.css";
 import { Input, Button } from "antd";
 import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone, SearchOutlined } from "@ant-design/icons";
-import { useRef,useEffect } from "react";
+import { useRef, useEffect } from "react";
 import useChat from "../hooks/useChat";
 
 const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }) => {
@@ -9,10 +9,10 @@ const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }
   const focusUsername = () => usernameInput.current.focus();
   const passwordInput = useRef();
   const focusPassword = () => passwordInput.current.focus();
-  const {login,sendUser}=useChat();
+  const { login, sendUser } = useChat(displayStatus);
   useEffect(() => {
     if (login) {
-      setSignedIn(login)
+      setSignedIn(login);
     }
   }, [login]);
   return (
@@ -59,10 +59,7 @@ const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }
               msg: "Missing user password",
             });
           else {
-            sendUser(me,password)
-            
-           
-            
+            sendUser(me, password);
           }
         }}
         ref={passwordInput}
