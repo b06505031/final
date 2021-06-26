@@ -106,7 +106,7 @@ const useChat = (displayStatus) => {
           });
         }
         setLogin(e.data.login);
-        // console.log(e.data.login);
+        // console.log(e.data.login)
         break;
       }
       default:
