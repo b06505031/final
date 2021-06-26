@@ -60,7 +60,7 @@ const wss = new WebSocket.Server({
 const validateUser = async (name) => {
   const existing = await UserModel.findOne({ name });
   if (existing) return existing;
-  return new UserModel({ name }).save();
+  // return new UserModel({ name,password }).save();
 };
 
 // const validateChatBox = async (name, participants) => {
@@ -116,7 +116,7 @@ wss.on('connection', function connection(client) {
         } = message;
         
         const dateBoxName = makeName(name, date);
-        const user = await validateUser(name);
+        const user=await UserModel.findOne({name})
         const dateBox =await validateDateBox(dateBoxName, user);
         if (dateBoxes[client.box]){
           // user was in another chat box
@@ -186,7 +186,7 @@ wss.on('connection', function connection(client) {
         } = message;
         const dateBoxName = makeName(name, date);
 
-        const user = await validateUser(name);
+        const user=await UserModel.findOne({name})
         const dateBox = await validateDateBox(dateBoxName, user);
         const newItem = new DataModel({ user, item:item,category:category,dollar:dollar });
         await newItem.save();
@@ -241,6 +241,20 @@ wss.on('connection', function connection(client) {
       //     });
       //   });
       // }
+      case 'PASSCHANGE':{
+        const {
+          data: { name, password },
+        } = message;
+        const existuser=await UserModel.findOneAndUpdate({name:name}, { password: password })
+        await existuser.save();
+        client.sendEvent({
+          type: 'PASSCHANGE',
+          data: {
+            change:true
+            }
+        });
+        
+      }
       case 'DELETE':{
         const {
           data: { id },

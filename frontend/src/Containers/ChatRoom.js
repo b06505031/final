@@ -10,7 +10,7 @@ import "./ChatRoom.css";
 const { Option } = Select;
 const { SubMenu } = Menu;
 
-const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
+const ChatRoom = ({ me, displayStatus, setSignedIn ,setChangepass}) => {
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
@@ -157,7 +157,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
     return data;
   };
   // console.log(dataToday(boxes));
-  // console.log(items)
+  console.log(items)
   return (
     <>
       <div className="App-header">
@@ -169,7 +169,10 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
           mode="horizontal"
         >
           <SubMenu key="sub4" title="Menu" icon={<MenuOutlined />}>
-            <Menu.Item key="1" icon={<SettingOutlined />}>
+            <Menu.Item key="1" icon={<SettingOutlined />}
+            onClick={() => {
+              setChangepass(true);
+            }}>
               Change password
             </Menu.Item>
             <Menu.Item
@@ -177,6 +180,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
               icon={<LogoutOutlined />}
               onClick={() => {
                 setSignedIn(false);
+                
               }}
             >
               Logout

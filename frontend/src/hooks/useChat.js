@@ -6,6 +6,8 @@ const useChat = (displayStatus) => {
   const [status, setStatus] = useState({}); // { type, msg }
   const [items, setItems] = useState([]);
   const [login, setLogin] = useState(false);
+  const [change, setChange] = useState(false);
+
   const waitForOpenSocket = () => {
     return new Promise((resolve, reject) => {
       const maxNumberOfAttempts = 10;
@@ -81,6 +83,17 @@ const useChat = (displayStatus) => {
       type: "CHECK",
       data: { name: name, password: password },
     });
+
+  };
+  const sendChangepass = (name, password) => {
+    if (!name || !password) {
+      throw new Error("Empty input!");
+    }
+
+    client.sendEvent({
+      type: "PASSCHANGE",
+      data: { name: name, password: password },
+    });
   };
 
   const onEvent = (e) => {
@@ -100,7 +113,10 @@ const useChat = (displayStatus) => {
         setItems((oldItem) => [...oldItem, e.data.data]);
         break;
       }
-      
+      case "PASSCHANGE": {
+        setChange(e.data.change)
+        break;
+      }
       case "CHAT": {
         // console.log(e.data.messages);
         // setMessages(e.data.messages);
@@ -127,7 +143,7 @@ const useChat = (displayStatus) => {
     }
   };
 
-  return { status, items, login, startDate, sendItem, sendUser, sendDeleteItem };
+  return { status, items, login,change, startDate, sendItem, sendUser, sendDeleteItem ,sendChangepass};
 };
 
 export default useChat;
