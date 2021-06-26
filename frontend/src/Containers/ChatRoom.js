@@ -10,7 +10,7 @@ import "./ChatRoom.css";
 const { Option } = Select;
 const { SubMenu } = Menu;
 
-const ChatRoom = ({ me, displayStatus }) => {
+const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
@@ -126,7 +126,12 @@ const ChatRoom = ({ me, displayStatus }) => {
       title: "Delete",
       key: "delete",
       render: () => (
-        <Space size="middle">
+        <Space
+          size="middle"
+          onClick={(e) => {
+            console.log(e);
+          }}
+        >
           <button className="item-delete" style={{ fontSize: "10px", borderColor: "transparent", borderRadius: "50%" }}>
             <CloseOutlined />
           </button>
@@ -163,7 +168,13 @@ const ChatRoom = ({ me, displayStatus }) => {
             <Menu.Item key="1" icon={<SettingOutlined />}>
               Change password
             </Menu.Item>
-            <Menu.Item key="2" icon={<LogoutOutlined />}>
+            <Menu.Item
+              key="2"
+              icon={<LogoutOutlined />}
+              onClick={() => {
+                setSignedIn(false);
+              }}
+            >
               Logout
             </Menu.Item>
           </SubMenu>
