@@ -80,7 +80,6 @@ const useChat = (displayStatus) => {
       type: "CHECK",
       data: { name: name, password: password },
     });
-
   };
   const sendChangepass = (name, password) => {
     if (!name || !password) {
@@ -111,7 +110,7 @@ const useChat = (displayStatus) => {
         break;
       }
       case "PASSCHANGE": {
-        setChange(e.data.change)
+        setChange(e.data.change);
         break;
       }
       case "CHAT": {
@@ -131,6 +130,11 @@ const useChat = (displayStatus) => {
             type: "error",
             msg: "Wrong password",
           });
+        } else {
+          displayStatus({
+            type: "success",
+            msg: "Login In !",
+          });
         }
         // console.log(e.data.login)
         break;
@@ -140,7 +144,7 @@ const useChat = (displayStatus) => {
     }
   };
 
-  return { status, items, login,change, startDate, sendItem, sendUser, sendDeleteItem ,sendChangepass};
+  return { status, items, login, change, startDate, sendItem, sendUser, sendDeleteItem, sendChangepass };
 };
 
 export default useChat;

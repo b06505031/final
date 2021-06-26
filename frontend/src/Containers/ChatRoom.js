@@ -186,7 +186,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
       <div className="App-header">
         <h1>{me}'s Wealth Management</h1>
         <Menu
-          style={{ width: 100, fontWeight: "600" }}
+          style={{ width: 100, fontWeight: "600", borderRadius: "5px" }}
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
           mode="horizontal"
@@ -206,6 +206,10 @@ const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
               icon={<LogoutOutlined />}
               onClick={() => {
                 setSignedIn(false);
+                displayStatus({
+                  type: "success",
+                  msg: "Logout !",
+                });
               }}
             >
               Logout
