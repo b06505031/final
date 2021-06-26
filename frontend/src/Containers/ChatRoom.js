@@ -1,13 +1,14 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions } from "antd";
-import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions, Menu } from "antd";
+import { PlusOutlined, CloseOutlined, AppstoreOutlined, MailOutlined, SettingOutlined } from "@ant-design/icons";
 // import ChatModal from "../Components/ChatModal";
 // import useChatBox from "../hooks/useChatBox";
 import useChat from "../hooks/useChat";
 import "./ChatRoom.css";
 
 const { Option } = Select;
+const { SubMenu } = Menu;
 
 const ChatRoom = ({ me, displayStatus }) => {
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
@@ -150,6 +151,20 @@ const ChatRoom = ({ me, displayStatus }) => {
   // console.log(items)
   return (
     <>
+      <div className="App-header">
+        <h1>{me}</h1>
+        <Menu
+          style={{ width: 150, fontWeight: "600" }}
+          defaultSelectedKeys={["1"]}
+          defaultOpenKeys={["sub1"]}
+          mode="horizontal"
+        >
+          <SubMenu key="sub4" icon={<SettingOutlined />} title="Setting">
+            <Menu.Item key="1">Change password</Menu.Item>
+            <Menu.Item key="2">Logout</Menu.Item>
+          </SubMenu>
+        </Menu>
+      </div>
       <div className="App-title">
         <Space direction="horizontal">
           <h1>{today}</h1>
@@ -199,9 +214,11 @@ const ChatRoom = ({ me, displayStatus }) => {
       </div>
       <div className="App-total_cost">
         <Descriptions bordered>
-          <Descriptions.Item label="Total Spend" labelStyle={{ background: "#d9d9d9" }}>{`${calTotalCost(
-            boxes
-          )}  TWD`}</Descriptions.Item>
+          <Descriptions.Item
+            label="Total Spend"
+            labelStyle={{ background: "#d9d9d9", fontWeight: "bolder" }}
+            contentStyle={{ fontSize: "15px", fontWeight: "bolder" }}
+          >{`${calTotalCost(boxes)}  TWD`}</Descriptions.Item>
         </Descriptions>
       </div>
     </>
