@@ -1,7 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import SignIn from "./Containers/SignIn";
-import ChangePassword from "./Containers/ChangePassword"
+import ChangePassword from "./Containers/ChangePassword";
 import ChatRoom from "./Containers/ChatRoom";
 import { message } from "antd";
 
@@ -19,7 +19,7 @@ const App = () => {
       const { type, msg } = payload;
       const content = {
         content: msg,
-        duration: 0.5,
+        duration: 1.5,
       };
       switch (type) {
         case "success":
@@ -45,28 +45,27 @@ const App = () => {
 
   return (
     <div className="App">
-      {signedIn&&!changepass ? (
+      {signedIn && !changepass ? (
         <ChatRoom me={me} displayStatus={displayStatus} setSignedIn={setSignedIn} setChangepass={setChangepass} />
-      ) : (!signedIn&&!changepass ?(
-      <SignIn
-        me={me}
-        setMe={setMe}
-        password={password}
-        setPassword={setPassword}
-        setSignedIn={setSignedIn}
-        displayStatus={displayStatus}
-        
-      />):(
-      <ChangePassword
-        me={me}
-        setMe={setMe}
-        password={password}
-        setPassword={setPassword}
-        setSignedIn={setSignedIn}
-        displayStatus={displayStatus}
-        setChangepass={setChangepass}
-      />)
-        
+      ) : !signedIn && !changepass ? (
+        <SignIn
+          me={me}
+          setMe={setMe}
+          password={password}
+          setPassword={setPassword}
+          setSignedIn={setSignedIn}
+          displayStatus={displayStatus}
+        />
+      ) : (
+        <ChangePassword
+          me={me}
+          setMe={setMe}
+          password={password}
+          setPassword={setPassword}
+          setSignedIn={setSignedIn}
+          displayStatus={displayStatus}
+          setChangepass={setChangepass}
+        />
       )}
     </div>
   );
