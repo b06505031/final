@@ -64,15 +64,12 @@ const useChat = (displayStatus) => {
   };
   const sendDeleteItem = (id) => {
     if (!id) {
-      
-    }else{
+    } else {
       client.sendEvent({
         type: "DELETE",
         data: { id: id },
       });
     }
-
-    
   };
   const sendUser = (name, password) => {
     if (!name || !password) {
