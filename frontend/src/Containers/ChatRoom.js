@@ -1,7 +1,7 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions, Menu } from "antd";
-import { PlusOutlined, CloseOutlined, AppstoreOutlined, MailOutlined, SettingOutlined } from "@ant-design/icons";
+import { PlusOutlined, CloseOutlined, SettingOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 // import ChatModal from "../Components/ChatModal";
 // import useChatBox from "../hooks/useChatBox";
 import useChat from "../hooks/useChat";
@@ -159,9 +159,13 @@ const ChatRoom = ({ me, displayStatus }) => {
           defaultOpenKeys={["sub1"]}
           mode="horizontal"
         >
-          <SubMenu key="sub4" icon={<SettingOutlined />} title="Setting">
-            <Menu.Item key="1">Change password</Menu.Item>
-            <Menu.Item key="2">Logout</Menu.Item>
+          <SubMenu key="sub4" title="Menu" icon={<MenuOutlined />}>
+            <Menu.Item key="1" icon={<SettingOutlined />}>
+              Change password
+            </Menu.Item>
+            <Menu.Item key="2" icon={<LogoutOutlined />}>
+              Logout
+            </Menu.Item>
           </SubMenu>
         </Menu>
       </div>
