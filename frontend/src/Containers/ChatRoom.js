@@ -28,6 +28,7 @@ const ChatRoom = ({ me, displayStatus }) => {
     if (dateString === "") {
       setToday(today);
     }
+    startDate(me, dateString);
   };
 
   // console.log(items)
@@ -71,7 +72,9 @@ const ChatRoom = ({ me, displayStatus }) => {
     }
     return total;
   };
-
+  const deleteItem = (key)=>{
+    console.log(key.target)
+  }
   const columns = [
     {
       title: "Item",
@@ -124,10 +127,10 @@ const ChatRoom = ({ me, displayStatus }) => {
     {
       title: "Delete",
       key: "delete",
-      render: () => (
+      render: (key) => (
         <Space size="middle">
           <button className="item-delete" style={{ fontSize: "10px", borderColor: "transparent", borderRadius: "50%" }}>
-            <CloseOutlined />
+            <CloseOutlined  id={key} onClick={deleteItem}/>
           </button>
         </Space>
       ),
@@ -192,7 +195,7 @@ const ChatRoom = ({ me, displayStatus }) => {
           // bordered
           style={{ width: "700px", margin: "10px", height: "300px" }}
           columns={columns}
-          dataSource={dataToday(boxes)}
+          dataSource={items}
           pagination={{ pageSize: 5 }}
           scroll={{ y: 252 }}
         ></Table>
