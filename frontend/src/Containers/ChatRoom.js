@@ -29,6 +29,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
     if (dateString === "") {
       setToday(today);
     }
+    startDate(me, dateString);
   };
 
   // console.log(items)
@@ -63,16 +64,22 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
 
   const calTotalCost = (boxes) => {
     let total = 0;
+    // for (let i in boxes) {
+    //   if (boxes[i].day === today) {
+    //     for (let key in boxes[i]["spending_item"]) {
+    //       total += Number(boxes[i]["spending_item"][key].dollar);
+    //     }
+    //   }
+    // }
     for (let i in boxes) {
-      if (boxes[i].day === today) {
-        for (let key in boxes[i]["spending_item"]) {
-          total += Number(boxes[i]["spending_item"][key].dollar);
-        }
-      }
+      console.log(boxes[i]);
+      total += Number(boxes[i].dollar);
     }
     return total;
   };
-
+  const deleteItem = (key) => {
+    console.log(key.target);
+  };
   const columns = [
     {
       title: "Item",
@@ -125,15 +132,10 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
     {
       title: "Delete",
       key: "delete",
-      render: () => (
-        <Space
-          size="middle"
-          onClick={(e) => {
-            console.log(e);
-          }}
-        >
+      render: (key) => (
+        <Space size="middle">
           <button className="item-delete" style={{ fontSize: "10px", borderColor: "transparent", borderRadius: "50%" }}>
-            <CloseOutlined />
+            <CloseOutlined id={key} onClick={deleteItem} />
           </button>
         </Space>
       ),
@@ -222,7 +224,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
           // bordered
           style={{ width: "700px", margin: "10px", height: "300px" }}
           columns={columns}
-          dataSource={dataToday(boxes)}
+          dataSource={items}
           pagination={{ pageSize: 5 }}
           scroll={{ y: 252 }}
         ></Table>
@@ -233,7 +235,7 @@ const ChatRoom = ({ me, displayStatus, setSignedIn }) => {
             label="Total Spend"
             labelStyle={{ background: "#d9d9d9", fontWeight: "bolder" }}
             contentStyle={{ fontSize: "15px", fontWeight: "bolder" }}
-          >{`${calTotalCost(boxes)}  TWD`}</Descriptions.Item>
+          >{`${calTotalCost(items)}  TWD`}</Descriptions.Item>
         </Descriptions>
       </div>
     </>

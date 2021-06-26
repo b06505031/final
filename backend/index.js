@@ -131,13 +131,14 @@ wss.on('connection', function connection(client) {
         client.sendEvent({
           type: 'OPEN',
           data: {
-            datas: dateBox.datas.map(({ user: { name }, item,category,dollar }) => ({
-              name,
+            datas: dateBox.datas.map(({ user: { name }, item,category,dollar,_id}) => ({
+              // name,
               // DataModel.findById
               item,
               category,
               dollar,
-              dateBoxName,
+              key:_id
+              // dateBoxName,
             })),
           },
         });
