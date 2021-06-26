@@ -241,6 +241,13 @@ wss.on('connection', function connection(client) {
       //     });
       //   });
       // }
+      case 'DELETE':{
+        const {
+          data: { id },
+        } = message;
+        const listItem= await DataModel.findByIdAndDelete(id)
+
+      }
       case 'CHECK':{
         const {
           data: { name, password },

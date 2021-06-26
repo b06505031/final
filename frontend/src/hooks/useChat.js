@@ -60,6 +60,18 @@ const useChat = (displayStatus) => {
       data: { name: name, date: date, item: item, category: category, dollar: dollar },
     });
   };
+  const sendDeleteItem = (id) => {
+    if (!id) {
+      
+    }else{
+      client.sendEvent({
+        type: "DELETE",
+        data: { id: id },
+      });
+    }
+
+    
+  };
   const sendUser = (name, password) => {
     if (!name || !password) {
       throw new Error("Empty input!");
@@ -88,6 +100,7 @@ const useChat = (displayStatus) => {
         setItems((oldItem) => [...oldItem, e.data.data]);
         break;
       }
+      
       case "CHAT": {
         // console.log(e.data.messages);
         // setMessages(e.data.messages);
@@ -114,7 +127,7 @@ const useChat = (displayStatus) => {
     }
   };
 
-  return { status, items, login, startDate, sendItem, sendUser };
+  return { status, items, login, startDate, sendItem, sendUser, sendDeleteItem };
 };
 
 export default useChat;
