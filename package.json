@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "cd frontend && yarn start",
-    "server": "cd backend && yarn server",
-    "vercel-build": "node ./build.js"
+    "server": "cd backend && yarn server"
   },
   "dependencies": {
     "uuid": "^8.3.2"
