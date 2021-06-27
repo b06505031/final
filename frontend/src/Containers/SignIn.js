@@ -2,14 +2,14 @@ import "../App.css";
 import { Input, Button } from "antd";
 import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone, SearchOutlined } from "@ant-design/icons";
 import { useRef, useEffect } from "react";
-import useChat from "../hooks/useChat";
+import useTrack from "../hooks/useTrack";
 
 const SignIn = ({ me, setMe, password, setPassword, setSignedIn, displayStatus }) => {
   const usernameInput = useRef();
   const focusUsername = () => usernameInput.current.focus();
   const passwordInput = useRef();
   const focusPassword = () => passwordInput.current.focus();
-  const { login, sendUser } = useChat(displayStatus);
+  const { login, sendUser } = useTrack(displayStatus);
   useEffect(() => {
     if (login) {
       setSignedIn(login);

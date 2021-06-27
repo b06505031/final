@@ -2,8 +2,8 @@ import { useState } from "react";
 
 const client = new WebSocket("ws://localhost:4000");
 
-const useChat = (displayStatus) => {
-  const [status, setStatus] = useState({}); // { type, msg }
+const useTrack = (displayStatus) => {
+
   const [items, setItems] = useState([]);
   const [login, setLogin] = useState(false);
   const [change, setChange] = useState(false);
@@ -98,10 +98,10 @@ const useChat = (displayStatus) => {
 
     switch (type) {
       case "OPEN": {
-        // console.log(e.data.messages);
+
         console.log(e.data);
         setItems(e.data.datas);
-        // setMessages(e.data.messages);
+
         break;
       }
       case "UPLOAD": {
@@ -111,16 +111,6 @@ const useChat = (displayStatus) => {
       }
       case "PASSCHANGE": {
         setChange(e.data.change);
-        break;
-      }
-      case "CHAT": {
-        // console.log(e.data.messages);
-        // setMessages(e.data.messages);
-        break;
-      }
-      case "MESSAGE": {
-        // console.log(e.data.message);
-        // setMessages(oldMessage => [...oldMessage, e.data.message]);
         break;
       }
       case "CHECK": {
@@ -144,7 +134,7 @@ const useChat = (displayStatus) => {
     }
   };
 
-  return { status, items, login, change, startDate, sendItem, sendUser, sendDeleteItem, sendChangepass };
+  return { items, login, change, startDate, sendItem, sendUser, sendDeleteItem, sendChangepass };
 };
 
-export default useChat;
+export default useTrack;

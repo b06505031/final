@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import SignIn from "./Containers/SignIn";
 import ChangePassword from "./Containers/ChangePassword";
-import ChatRoom from "./Containers/ChatRoom";
+import TrackRoom from "./Containers/TrackRoom";
 import { message } from "antd";
 
 const LOCALSTORAGE_KEY = "save-me";
@@ -46,7 +46,7 @@ const App = () => {
   return (
     <div className="App">
       {signedIn && !changepass ? (
-        <ChatRoom me={me} displayStatus={displayStatus} setSignedIn={setSignedIn} setChangepass={setChangepass} />
+        <TrackRoom me={me} displayStatus={displayStatus} setSignedIn={setSignedIn} setChangepass={setChangepass} />
       ) : !signedIn && !changepass ? (
         <SignIn
           me={me}

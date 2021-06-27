@@ -1,22 +1,20 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions, Menu, Progress } from "antd";
-import { PlusOutlined, CloseOutlined, SettingOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
-// import ChatModal from "../Components/ChatModal";
-// import useChatBox from "../hooks/useChatBox";
-import useChat from "../hooks/useChat";
-import "./ChatRoom.css";
+import { PlusOutlined,SettingOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
+import useTrack from "../hooks/useTrack";
+import "./TrackRoom.css";
 
 const { Option } = Select;
 const { SubMenu } = Menu;
 
-const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
+const TrackRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
   const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
   const [item, setItem] = useState("");
   const [category, setCategory] = useState("Housing");
   const [dollar, setDollar] = useState(0);
   const [boxes, setBoxes] = useState([]);
-  const { items, startDate, sendItem, sendDeleteItem } = useChat(displayStatus);
+  const { items, startDate, sendItem, sendDeleteItem } = useTrack(displayStatus);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -298,4 +296,4 @@ const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
   );
 };
 
-export default ChatRoom;
+export default TrackRoom;

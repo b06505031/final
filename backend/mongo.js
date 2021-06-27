@@ -1,8 +1,5 @@
 import mongoose from 'mongoose';
 
-// i use mongodb://localhost:27017/cardmongo for MONGO_URL
-
-
 function connectMongo() {
 
   if (!process.env.MONGO_URL) {
