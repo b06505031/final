@@ -23,7 +23,7 @@ const TrackRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
       setOpen(true);
     }
   }, [open]);
-  const onChange = (date, dateString) => {
+  const onChange = (dateString) => {
     setToday(dateString);
     if (dateString === "") {
       setToday(today);
