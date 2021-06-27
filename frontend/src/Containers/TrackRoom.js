@@ -1,7 +1,7 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { Input, DatePicker, Space, Button, Table, Tag, Select, Descriptions, Menu, Progress } from "antd";
-import { PlusOutlined,SettingOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
+import { PlusOutlined, SettingOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import useTrack from "../hooks/useTrack";
 import "./TrackRoom.css";
 
@@ -27,7 +27,10 @@ const TrackRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
     setToday(dateString);
     if (dateString === "") {
       setToday(today);
+      dateString = today;
     }
+    // console.log("dateString: ", dateString);
+    // console.log("today: ", today);
     startDate(me, dateString);
   };
 
@@ -45,7 +48,7 @@ const TrackRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
         type: "error",
         msg: "Please enter price with number.",
       });
-      setDollar(0)
+      setDollar(0);
       return;
     }
     const newboxes = boxes;
