@@ -42,6 +42,14 @@ const ChatRoom = ({ me, displayStatus, setSignedIn, setChangepass }) => {
       });
       return;
     }
+    if (isNaN(dollar)) {
+      displayStatus({
+        type: "error",
+        msg: "Please enter price with number.",
+      });
+      setDollar(0)
+      return;
+    }
     const newboxes = boxes;
     if (newboxes.length === 0) {
       newboxes.push({ day: today, spending_item: [{ item, dollar, category }] });
