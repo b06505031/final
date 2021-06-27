@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
-import http from 'http';
-import WebSocket from 'ws';
-import express from 'express';
-import path from 'path';
-import { v4 } from 'uuid';
-import dotenv from 'dotenv-defaults';
-import mongo from './mongo';
+import mongoose from "mongoose";
+import http from "http";
+import WebSocket from "ws";
+import express from "express";
+import path from "path";
+import { v4 } from "uuid";
+import dotenv from "dotenv-defaults";
+import mongo from "./mongo";
 
 const app = express();
 dotenv.config();
@@ -16,14 +16,14 @@ dotenv.config();
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  name: { type: String},
-  password:{type: String},
-  dateBoxes: [{ type: mongoose.Types.ObjectId, ref: 'DateBox' }],
+  name: { type: String },
+  password: { type: String },
+  dateBoxes: [{ type: mongoose.Types.ObjectId, ref: "DateBox" }],
 });
 
 const dataSchema = new Schema({
-  dateBox: { type: mongoose.Types.ObjectId, ref: 'DateBox' },
-  user: { type: mongoose.Types.ObjectId, ref: 'User' },
+  dateBox: { type: mongoose.Types.ObjectId, ref: "DateBox" },
+  user: { type: mongoose.Types.ObjectId, ref: "User" },
   item: { type: String, required: true },
   category: { type: String, required: true },
   dollar: { type: String, required: true },
@@ -31,19 +31,19 @@ const dataSchema = new Schema({
 
 const dateBoxSchema = new Schema({
   name: { type: String, required: true },
-  user: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-  datas: [{ type: mongoose.Types.ObjectId, ref: 'Data' }],
+  user: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+  datas: [{ type: mongoose.Types.ObjectId, ref: "Data" }],
 });
 
-const UserModel = mongoose.model('User', userSchema);
-const DateBoxModel = mongoose.model('DateBox', dateBoxSchema);
-const DataModel = mongoose.model('Data', dataSchema);
+const UserModel = mongoose.model("User", userSchema);
+const DateBoxModel = mongoose.model("DateBox", dateBoxSchema);
+const DataModel = mongoose.model("Data", dataSchema);
 
 /* -------------------------------------------------------------------------- */
 /*                                  UTILITIES                                 */
 /* -------------------------------------------------------------------------- */
 const makeName = (name, date) => {
-  return [name, date].sort().join('_');
+  return [name, date].sort().join("_");
 };
 
 /* -------------------------------------------------------------------------- */
@@ -63,62 +63,53 @@ const validateUser = async (name) => {
   // return new UserModel({ name,password }).save();
 };
 
-
-const validateDateBox = async (name,user) => {
-
+const validateDateBox = async (name, user) => {
   let box = await DateBoxModel.findOne({ name });
-  if (!box) box = await new DateBoxModel({ name ,user}).save();
-  return box
-    .populate('user')
-    .populate({ path: 'datas', populate: 'user' })
-    .execPopulate();
+  if (!box) box = await new DateBoxModel({ name, user }).save();
+  return box.populate("user").populate({ path: "datas", populate: "user" }).execPopulate();
 };
 
-
-
-const chatBoxes = {}; 
-const dateBoxes ={}
-wss.on('connection', function connection(client) {
+const chatBoxes = {};
+const dateBoxes = {};
+wss.on("connection", function connection(client) {
   client.id = v4();
-  client.box = ''; 
+  client.box = "";
 
   client.sendEvent = (e) => client.send(JSON.stringify(e));
-  
-  client.on('message', async function incoming(message) {
+
+  client.on("message", async function incoming(message) {
     message = JSON.parse(message);
     // console.log(message);
     const { type } = message;
 
     switch (type) {
-
-      case 'OPEN':{
+      case "OPEN": {
         const {
           data: { name, date },
         } = message;
-        
-        const dateBoxName = makeName(name, date);
-        const user=await UserModel.findOne({name})
-        const dateBox =await validateDateBox(dateBoxName, user);
-        if (dateBoxes[client.box]){
 
+        const dateBoxName = makeName(name, date);
+        const user = await UserModel.findOne({ name });
+        const dateBox = await validateDateBox(dateBoxName, user);
+        if (dateBoxes[client.box]) {
           dateBoxes[client.box].delete(client);
         }
         client.box = dateBoxName;
         if (!dateBoxes[dateBoxName]) dateBoxes[dateBoxName] = new Set(); // make new record for chatbox
         dateBoxes[dateBoxName].add(client);
         // console.log(dateBox.length)
-          
+
         // console.log("----------------------------------------------------")
         client.sendEvent({
-          type: 'OPEN',
+          type: "OPEN",
           data: {
-            datas: dateBox.datas.map(({ user: { name }, item,category,dollar,_id}) => ({
+            datas: dateBox.datas.map(({ user: { name }, item, category, dollar, _id }) => ({
               // name,
               // DataModel.findById
               item,
               category,
               dollar,
-              key:_id
+              key: _id,
               // dateBoxName,
             })),
           },
@@ -126,88 +117,86 @@ wss.on('connection', function connection(client) {
 
         break;
       }
-      case 'UPLOAD':{
+      case "UPLOAD": {
         const {
-          data: { name, date, item,category,dollar },
+          data: { name, date, item, category, dollar },
         } = message;
         const dateBoxName = makeName(name, date);
 
-        const user=await UserModel.findOne({name})
+        const user = await UserModel.findOne({ name });
         const dateBox = await validateDateBox(dateBoxName, user);
-        const newItem = new DataModel({ user, item:item,category:category,dollar:dollar });
+        const newItem = new DataModel({ user, item: item, category: category, dollar: dollar });
         await newItem.save();
         dateBox.datas.push(newItem);
         await dateBox.save();
-        console.log(item)
+        console.log(item);
         dateBoxes[dateBoxName].forEach((client) => {
           // console.log(client);
           client.sendEvent({
-            type: 'UPLOAD',
+            type: "UPLOAD",
             data: {
               data: {
                 name,
                 item,
                 category,
                 dollar,
-                dateBoxName
+                dateBoxName,
               },
             },
           });
         });
         break;
       }
-      case 'PASSCHANGE':{
+      case "PASSCHANGE": {
         const {
           data: { name, password },
         } = message;
-        const existuser=await UserModel.findOneAndUpdate({name:name}, { password: password })
+        const existuser = await UserModel.findOneAndUpdate({ name: name }, { password: password });
         await existuser.save();
         client.sendEvent({
-          type: 'PASSCHANGE',
+          type: "PASSCHANGE",
           data: {
-            change:true
-            }
+            change: true,
+          },
         });
         break;
-        
       }
-      case 'DELETE':{
+      case "DELETE": {
         const {
           data: { id },
         } = message;
-        const listItem= await DataModel.findByIdAndDelete(id)
+        const listItem = await DataModel.findByIdAndDelete(id);
         break;
       }
-      case 'CHECK':{
+      case "CHECK": {
         const {
           data: { name, password },
         } = message;
-        const existuser=await UserModel.findOne({name})
-        if(!existuser){
-          const user =new UserModel({name:name,password:password});
+        const existuser = await UserModel.findOne({ name });
+        if (!existuser) {
+          const user = new UserModel({ name: name, password: password });
           await user.save();
           client.sendEvent({
-            type: 'CHECK',
+            type: "CHECK",
             data: {
-              login:true
-              }
+              login: true,
+            },
           });
-        }else{
-          if(existuser.password!==password){
+        } else {
+          if (existuser.password !== password) {
             // console.log("password ERROR")
             client.sendEvent({
-              type: 'CHECK',
+              type: "CHECK",
               data: {
-                login:false
-                }
+                login: false,
+              },
             });
-          }
-          else if(existuser.password===password){
+          } else if (existuser.password === password) {
             client.sendEvent({
-              type: 'CHECK',
+              type: "CHECK",
               data: {
-                login:true
-                }
+                login: true,
+              },
             });
           }
         }
@@ -216,14 +205,14 @@ wss.on('connection', function connection(client) {
     }
 
     // disconnected
-    client.once('close', () => {
+    client.once("close", () => {
       dateBoxes[client.box].delete(client);
     });
   });
 });
 
 mongo.connect();
-
-server.listen(4000, () => {
-  console.log('Server listening at http://localhost:4000');
+const port = process.env.PORT || 4000;
+server.listen(port, () => {
+  console.log("Server listening at http://localhost:4000");
 });
