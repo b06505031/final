@@ -47,5 +47,5 @@ https://github.com/b06505031/final
 1. 進入 backend 執行 `npm install` 安裝必要套件
 2. 在 backend 底下新增 .env 並加入此行 `MONGO_URL=<自己的mongoDB連結>`
 3. 進入 frontend 執行 `npm install` 安裝必要套件
-4. 進入 backend 執行 `npm server` 開啟後端以及連接資料庫
-5. 進入 frontend 執行 `npm start` 開啟 localhost:3000 顯示畫面，接者跟去操作方法操作即可。
+4. 進入 backend 執行 `yarn server` 開啟後端以及連接資料庫
+5. 進入 frontend 執行 `yarn start` 開啟 localhost:3000 顯示畫面，接者跟去操作方法操作即可。
