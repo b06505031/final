@@ -130,20 +130,34 @@ wss.on("connection", function connection(client) {
         dateBox.datas.push(newItem);
         await dateBox.save();
         console.log(item);
-        dateBoxes[dateBoxName].forEach((client) => {
-          // console.log(client);
-          client.sendEvent({
-            type: "UPLOAD",
-            data: {
-              data: {
-                name,
-                item,
-                category,
-                dollar,
-                dateBoxName,
-              },
-            },
-          });
+        // dateBoxes[dateBoxName].forEach((client) => {
+        //   // console.log(client);
+        //   client.sendEvent({
+        //     type: "UPLOAD",
+        //     data: {
+        //       data: {
+        //         name,
+        //         item,
+        //         category,
+        //         dollar,
+        //         dateBoxName,
+        //       },
+        //     },
+        //   });
+        // });
+        client.sendEvent({
+          type: "UPLOAD",
+          data: {
+            datas: dateBox.datas.map(({ user: { name }, item, category, dollar, _id }) => ({
+              // name,
+              // DataModel.findById
+              item,
+              category,
+              dollar,
+              key: _id,
+              // dateBoxName,
+            })),
+          },
         });
         break;
       }

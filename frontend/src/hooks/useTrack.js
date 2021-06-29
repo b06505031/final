@@ -105,8 +105,10 @@ const useTrack = (displayStatus) => {
         break;
       }
       case "UPLOAD": {
-        console.log(e.data.data);
-        setItems((oldItem) => [...oldItem, e.data.data]);
+        console.log(e.data.datas);
+        // setItems((oldItem) => [...oldItem, e.data.data]);
+        setItems(e.data.datas);
+
         break;
       }
       case "PASSCHANGE": {
