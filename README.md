@@ -12,6 +12,8 @@ https://youtu.be/FcF4B1LdbHk
 
 ## Deployed link
 
+http://34.81.105.213:3000/
+
 ## Github link
 
 https://github.com/b06505031/final
